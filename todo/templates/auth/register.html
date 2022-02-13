@@ -1,0 +1,27 @@
+<!-- Cuando queremos extender desde base, tenemos que indicar la raiz de la carpeta de templates que es en este caso donde se encuentra base, si nosotros quisieramos extender desde otra tendriamos que poner por ejemplo /auth/register.html, es por esto que como base esta en la raiz extendemos de ella simplemente colocando el nombre base.html, el archivo base siempre estara en la raiz en templates, ya que este es el lugar en comun en donde este se va a encontrar, aparte siempre comenzamos navegando desde template y de alli nos comenzamos a adentrar en las carpetas internas que vallamos creando -->
+
+<!-- Extendemos del archivo base.html del cual vamos a cargar los bloques -->
+{% extends 'base.html' %}
+
+<!-- Definimos el header -->
+{% block header %}
+    <!--Definimos el bloque de el titulo-->
+    <h1>{% block title %} Registro {% endblock %}</h1>
+{% endblock %}
+
+<!--Definimos el bloque del contenido-->
+{% block content %}
+    <!-- Agregamos un formulario con el metodo de post medainte el cual enviaremos los datos -->
+    <form method="post">
+        <label for="username">Username</label>
+        <!-- Mediante la propiedad de name es como vamos a recibir los datos en nuestro backend -->
+        <input name="username" id="username" required/>
+        <!-- Agregamos nuestro password -->
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" required/>
+        <!-- Colocamos el boton para poder enviar el formulario -->
+        <input type="submit" value="Registrarse"/>
+    </form>
+{% endblock %}
+
+

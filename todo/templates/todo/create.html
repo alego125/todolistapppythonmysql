@@ -1,0 +1,16 @@
+<!-- Extendemos de la plantilla base -->
+{% extends 'base.html' %}
+
+<!-- Creamos el header -->
+{% block header %}
+<h1>{% block title %}Nuevo Todo{% endblock %}</h1>
+{% endblock %}
+
+<!-- Ciontinuamos con el contenido de la pagina y el formulario -->
+{% block content %}
+<form method="post"> 
+    <label for="description">Descripcion</label>
+    <input name="description" id="Description" required/>
+    <input type="submit" value="Guardar"/>
+</form>
+{% endblock %}

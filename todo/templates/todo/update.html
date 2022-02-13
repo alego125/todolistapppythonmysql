@@ -1,0 +1,33 @@
+<!-- Extendemos de la plantilla base -->
+{% extends 'base.html' %}
+
+{% block header %}
+<!-- Indicamos el titulo mediante el bloque de titulo y le indicamos dentro el todo que queremos mostrar es decir todo['description'], es decir obtenemos la descripcion de nuestro todo para mostrar -->
+<h1>{% block title %}Editar{{todo['description']}}{% endblock %}</h1>
+{% endblock %}
+
+<!-- Creamos el bloque de contenido -->
+{% block content %}
+<form method="post">
+    <label for="description">Descripcion</label>
+    <!-- Aca lo que vamoa a querer hacer es que el valor que tenia el campo de descripcion de nuestro registro de todo queremos que tambien lo tenga este campo y para poder realizar esto tenemos que usar la etiqueta de value en el input y dentro colocar el codigo para obtener esa descripcion, le pasamos request.form['description'] con lo cual intentamos obtener el valor desde la misma peticion pero si esto no se puede lo vamos a sacar del mismo todo que estamos pasando a travez del renderizado de la plantilla por medio de parametro todo['description'] -->
+    <input type="description" name="description" id="description" value="{{ request.form['description'] or todo['description'] }}" required />
+    <!--  Ahora a continuacion revisamos el estado de si se encuentra completado o no -->
+    <label for="completed">Completado</label>
+    <!-- Cuando trabajamos con checkbox, en este caso si el estado de nuestro todo esta completado lo que haremos sera hacer que se marque el checkbox, y en caso de que no se encuentre completado entonces no estara marcado, para esto vamos a usar una propiedad de checked y para esto usaremos una condicion  if todo['completed'] == 1  le decimos que cuando el valor que traiga de la base de datos el campo de completed sea igual a 1, esto es 1 por que nosotros le mandamos el valor a la base de datos usamos el valor de False (el cual es el valor que nosotros sintacticamente tenemos que usar), pero cuando nos traemos los registros desde mysql, este a los booleans no los guarda como true o false si no que los guarda como un 0 o 1 es por esto que nosotros comparamos el estado de completed con 1 en vez de con true y en caso de que sea verdadero o 1 entonces entramos al condicional y le colocamos el valor de checked al input de tipo checkbox para marcarlo -->
+    <input type="checkbox" name="completed" id="completed" {% if todo['completed'] == '1' %}ckecked{% endif %}/>
+    
+    <!-- Boton para Guardar los cambios realizados -->
+    <input type="submit" value="Guardar" />
+</form>
+
+<!-- Agregamos un boton para eliminar el todo  -->
+<!-- Agregamos otro form con una funcion de accion que esta en todo.delete -->
+<!-- Le pasamos el id del elemento que queremos eliminar a travez del action tambien y lo sacamos accediendo a la propiedad de id accediendo a la propiedad de id de nuestro diccionario de todo -->
+<form action="{{ url_for('todo.delete', id=todo['id']) }}" method="post">
+    <!-- dentro de este form entonces creamos el input del Boton dentro del cual colocamos en el atributo onclick una funcion donde se retorna la funcion de confirm de javascript y preguntamos si esta seguro de eliminar el registro -->
+    <input class="danger" type="submit" value="Eliminar"
+    onclick="return confirm('¿Esta seguro de querer eliminarlo?')" />
+</form>
+
+{% endblock %}

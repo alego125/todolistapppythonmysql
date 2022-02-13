@@ -1,0 +1,46 @@
+<!-- Extendemos primero de nuestra plantilla base -->
+{% extends 'base.html' %}
+
+<!-- Usamos nuestro bloque de header para colocar un encabezado -->
+{% block header %}
+<h1>{% block title %}Todos{% endblock %}</h1>
+<!-- Seguido del titulo preguntamos si se encuentra nuestro usuario -->
+{% if g.user %}
+<!-- En caso de que se encuentre definido el usuario le agregamos un link con la clase action y le indicamos que debe ir a todo create es decir va a llevar a la pagina para crear un nuevo todo-->
+<a class="action" href="{{url_for('todo.create')}}">Nuevo</a>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<!-- Creamos una lista desordenada para imprimir toda la lista de todos que le pasamos a travez de nuestra funcion de index -->
+<ul>
+    {% for todo in todos %}
+    <li class="todo">
+        <!-- Aca dentro imprimimos el todo -->
+        <div>
+            <h1>
+                <!-- Ahora aca dentro lo que haremos es que si el todo se enceuntra completado el atributo dee completed de la tabla de todos va a decir cero si no esta completado o uno en caso de que lo este, por loq ue ahora mediante un if preguntamos  -->
+                {% if todo['completed'] == 1 %}
+                <!-- En caso de que se encuentre completo entonces lo que vmaos a hacer imprimir el todo pero tachado por que ya esta realizado para esto usamos la etiqueta de strike -->
+                <strike>{{ todo['description'] }}</strike>
+                {% else %}
+                <!-- En caso de que no se encuentre completado simplemente imprimimos el todo -->
+                {{ todo['description'] }}
+                {% endif %}
+            </h1>
+            <!-- Luego del titulo agregamos la fecha de cuando nuestro todo fue creado y agegamos un boton para podamos actualizar el todo ya sea para poder cambiar la descripcion o para poder marcarlo como completado para esto creamos un div y dentro de este llamamos a created_at que es la fecha y lo formateamos a tring para que tenga formato entendible y no de timestap que es como viene desde la base de datos, para esto usamos la funcion strftime(formato de fecha %Y año %m mes y %d dia) -->
+            <div class="about">{{ todo['created_at'].strftime('%Y-%m-%d') }}</div>
+            <!-- Creamos a continaucion el link que envia a la pagina de update para poder actualizar el registro del todo, y en el href ademas de la pagina en este caso debemos pasar un parametro que es el id que sera el que nosotros queremos actualizar -->
+            <a class="action" href="{{url_for('todo.update', id=todo['id'])}}">Editar</a>
+        </div>
+    </li>
+    <!-- Ahora a continuacion lo que haremos sera que cada vez que estemos iterando sobre estos todo consultaremos si es el ultimo todo que estamos imprimiendo en el caso de que sea el ultimo todo no mostraremos nada pero si es el ultimo vamos a mostrar una etiqueta de hr -->
+    {% if not loop.last %}´
+    <!-- Mediante loop podremos acceder a ciertas propiedades de la iteracion que estamos realizando, por ejemplo en este caso del boocle de los todo, en este caso la propiedad que nos interesa es la de last, po lo que si no es el ultimo entonces entramos al if e imprimimos un hr para mostrar una linea de separacion entre los todos -->
+    <hr>
+    {% endif %}    
+    {% endfor %}
+</ul>
+
+{% endblock %}

@@ -1,0 +1,40 @@
+<!--Plantilla html base para ser usada por las demas plantillas-->
+<!doctype html>
+<!--Creamos nuestro titulo con el bloque de titulo el cual vamos a ir cambiando en cada pagina segun lo vallamos necesitando -->
+<title>{% block title %}{% endblock %} - Todo List</title>
+<!--Indicamos el archivo de css-->
+<link rel="stylesheet" href="{{url_for('static', filename = 'style.css')}}">
+<nav>
+    <h1>Todo List</h1>
+    <!--A continuacion crearemos una lista donde vamos a dejar el estado de nuestra aplicacion, mas que nada si es que el usaurio ya inicio sesion le vamos a mostrar un boton para que pueda cerrar la sesion y si es que el usuario no ha iniciado sesion le vamos a mostrar el boton de inicio de sesion o de registro -->
+    <ul>
+        <!--Partimos preguntando mediante un condicional si es que dentro de nuestra variable de g se encuentra nuestro usuario-->
+        {% if g.user %}
+            <!--Aqui dentro vamos a agregar cada uno de los listados sacando el username de la propiedad de usuario vamos a sacar username-->
+            <li><span>{{g.user['username']}}</span></li>
+            <!--Luego de esto vamos a colocar otro elemento al listado pero ahora con un link y en este caso sera para poder cerrar la sesion del usuario-->
+            <li><a href="{{url_for('auth.logout')}}">Cerrar Sesion</a></li>
+            <!--Tambien agregaremos un else que en el caso de que el usuario no haya iniciado sesion lo van a llevar al registro o a iniciar sesion-->
+        {% else %}
+            <li><a href="{{url_for('auth.register')}}">Registrarse</a></li>
+            <li><a href="{{url_for('auth.login')}}">Iniciar sesion</a></li>
+        {% endif %}
+    </ul>
+</nav>
+<section class="content">
+    <!--Creamos un header en forma de bloque para llenar dinamicamente-->
+    <head>
+        {% block header %}
+        {% endblock %}
+    </head>
+    <!--Luego del header imprimimos los mensajes flash que enviamos mediante la funcion flash de nuestro codigo, para poder imprimir estos mensaje flash debemos iterar la lo que tae la funcion get_flashed_messages()-->
+    {% for message in get_flashed_messages() %}
+        <!--Con esta funcion get_flashed_messages lo que hacemos es obtener todos lo s mensajes flash y los vamos asignando a la variable message para usarlos y mostrarlos cada uno de ellos-->
+        <!--Ahora a continuacion imprimimos nuestros mensajes flash mediante divs-->
+        <div class="flash">{{ message }}</div>
+    {% endfor %}
+    <!--A continuaciones donde imprimimos nuestro contenido-->
+    {% block content %}
+    {% endblock %}
+    
+</section>
